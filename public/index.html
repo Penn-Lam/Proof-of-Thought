@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proof-of-Thought (PoT) - AI礼仪分享</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- 主创建界面 -->
+    <div id="main-container">
+        <h1 id="title">Proof-of-Thought</h1>
+        <h2 id="subtitle">为AI生成内容的分享注入人类思考</h2>
+        
+        <form id="pot-form" action="/create" method="post">
+            <!-- URL输入 -->
+            <div class="form-group">
+                <label for="url">目标链接</label>
+                <input type="url" name="url" id="url" placeholder="https://example.com" required autofocus autocomplete="off">
+            </div>
+
+            <!-- 自定义路径 -->
+            <div class="form-group">
+                <label for="path">自定义路径 (可选)</label>
+                <input type="text" name="path" id="path" placeholder="my-custom-path" autocomplete="off">
+            </div>
+
+            <!-- 场景选择 -->
+            <div class="form-group">
+                <label for="scene-select">分享场景</label>
+                <select name="scene" id="scene-select" required>
+                    <option value="">请选择分享场景...</option>
+                    <option value="ai_chat">分享AI聊天记录</option>
+                    <option value="ai_art">分享AI生成的艺术作品</option>
+                    <option value="ai_code">分享AI辅助的代码</option>
+                    <option value="general">通用分享</option>
+                </select>
+            </div>
+
+            <!-- 动态PoT表单容器 -->
+            <div id="pot-form-container" style="display: none;">
+                <h3>Proof of Thought</h3>
+                <div id="dynamic-form-fields"></div>
+            </div>
+
+            <!-- 提交按钮 -->
+            <div class="form-group" style="display: flex; justify-content: center;">
+                <button type="submit" id="submit-btn" disabled>创建PoT链接</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 成功页面 -->
+    <div id="success-container" style="display: none;">
+        <h1>PoT链接创建成功！</h1>
+        <div id="success-content">
+            <div class="pot-success-block link-display">
+                <label>短链接：</label>
+                <div id="short-link-display"></div>
+            </div>
+            
+            <div class="pot-success-block copy-section">
+                <label>复制分享文本：</label>
+                <div id="copy-text-display"></div>
+                <button id="copy-button" type="button">Copy</button>
+            </div>
+            
+            <button id="create-another" class="pot-success-block" type="button">创建另一个链接</button>
+        </div>
+    </div>
+
+    <script>
+        let warpSpeed = 0.5;
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"
+        integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ=="
+        crossorigin="anonymous"></script>
+    <script src="background.js"></script>
+    <script src="pot-form.js"></script>
+</body>
+
+</html>
