@@ -168,7 +168,7 @@
 
         <div id="result"></div>
     </div>
-
+    <script src="kimiChat.js"></script>
     <script>
         async function testGrabDialog() {
             const htmlFilePath = document.getElementById('htmlFilePath').value.trim();
@@ -212,7 +212,25 @@
                 const data = await response.json();
 
                 if (data.success) {
+                    console.log('Grabbing dialog successful:', data);
+                    console.log('抓取对话成功:', JSON.stringify( data.dialogs ));
                     showDialogResult(data);
+                    async function analyzeThinkingClient(dialogs) { 
+                        var response = await fetch('/analyze-thinking', 
+                        { method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+                            body: JSON.stringify({ dialog: dialogs }) }); 
+                        var result = await response.json(); 
+                            if (result.success) { 
+                                // 这里可以展示 
+                                result.data 
+                                console.log('思维分析结果:', result.data); 
+                                // 你可以把结果显示到页面 
+                                showResult('思维分析成功！\n' + JSON.stringify(result.data, null, 2), 'success'); 
+                            } else { 
+                                showResult('思维分析失败: ' + result.error, 'error'); 
+                            } 
+                        }
+                    analyzeThinking(data.dialogs);
                 } else {
                     showResult(`抓取失败: ${data.error}`, 'error');
                 }

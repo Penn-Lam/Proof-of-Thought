@@ -223,7 +223,10 @@ function validateForm() {
     submitBtn.disabled = !allFilled;
 }
 
+
+
 async function handleFormSubmit(e) {
+    console.log('handleFormSubmit called');
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -256,12 +259,14 @@ async function handleFormSubmit(e) {
         console.warn('抓取对话失败', err);
     }
 
+
     console.log('potData.dialog', potData.dialog);
     try {
         const res = await fetch('/analyze-thinking', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ dialog: potData.dialog })
+                // body: JSON.stringify({ dialog: potData.dialog })
+                body: JSON.stringify({ dialog: potData.dialog})
             });
         const data = await res.json();
         console.log("aaaaa",data);
@@ -270,7 +275,6 @@ async function handleFormSubmit(e) {
     }
     
 
-
     const submitData = {
         url: formData.get('url'),
         path: formData.get('path'),
@@ -278,7 +282,6 @@ async function handleFormSubmit(e) {
         potData: potData,
         copyTemplate: copyTemplate
     };
-
     try {
         submitBtn.disabled = true;
         submitBtn.textContent = '创建中...';

@@ -116,7 +116,7 @@ app.post("/grab-dialog", async (req, res) => {
 });
 
 
-// 添加对话抓取路由
+// 添加分析思考过程
 app.post("/analyze-thinking", async (req, res) => {
     const { dialog } = req.body;
     if (!dialog || !Array.isArray(dialog) || dialog.length === 0) {

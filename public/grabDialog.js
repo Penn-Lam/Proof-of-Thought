@@ -400,7 +400,7 @@ function parseHtml(html) {
 
     // 输出为 JSON
     // fs.writeFileSync('output.json', JSON.stringify(dialogs, null, 2), 'utf-8');
-    console.log(`对话已保存为 output.json，共提取 ${dialogs.length} 条对话`);
+    console.log(`对话共提取 ${dialogs.length} 条对话`);
 
     // 输出调试信息
     // dialogs.forEach((dialog, index) => {
