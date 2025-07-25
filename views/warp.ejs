@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= dest.path %> | Proof-of-Thought</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="warp-container">
+        <pre id="warp-text"></pre>
+    </div>
+
+    <script>
+        let warpSpeed = 2;
+        let warpUrl = '<%= dest.url %>';
+        
+        // PoT数据传递给前端
+        let linkData = {
+            path: '<%= dest.path %>',
+            url: '<%= dest.url %>',
+            scene: '<%= dest.scene %>',
+            potData: <%- JSON.stringify(dest.potData) %>,
+            copyTemplate: '<%= dest.copyTemplate %>'
+        };
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"
+        integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ=="
+        crossorigin="anonymous"></script>
+    <script src="background.js"></script>
+    <script src="warp.js"></script>
+</body>
+</html>
