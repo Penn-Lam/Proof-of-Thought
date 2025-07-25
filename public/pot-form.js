@@ -256,19 +256,19 @@ async function handleFormSubmit(e) {
         console.warn('抓取对话失败', err);
     }
 
-    if(potData.dialog && potData.dialog.length > 0) {
-        try {
-            const res = await fetch('/analyze-thinking', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ dialog: potData.dialog })
-                });
-            const data = await res.json();
-            console.log("aaaaa",data);
-        } catch (err) {
-            console.error('分析思维错误', err);
-        }
+    console.log('potData.dialog', potData.dialog);
+    try {
+        const res = await fetch('/analyze-thinking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dialog: potData.dialog })
+            });
+        const data = await res.json();
+        console.log("aaaaa",data);
+    } catch (err) {
+        console.error('分析思维错误', err);
     }
+    
 
 
     const submitData = {

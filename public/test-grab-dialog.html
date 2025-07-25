@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试对话抓取功能</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .loading {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .dialog-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+
+        .dialog-user {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+
+        .dialog-ai {
+            background-color: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+
+        .dialog-role {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .dialog-text {
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>对话抓取功能测试</h1>
+
+        <div class="form-group">
+            <label for="htmlFilePath">HTML 文件路径：</label>
+            <input type="text" id="htmlFilePath" placeholder="例如: ./example/_Gemini - 思想钢印：AI 时代的证明.html">
+        </div>
+
+        <div class="form-group">
+            <label for="url">或者输入 URL：</label>
+            <input type="url" id="url" placeholder="例如: https://gemini.google.com/share/c4471bf54153">
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="usePuppeteer" checked>
+                使用 Puppeteer（适用于动态网站如 Gemini）
+            </label>
+        </div>
+
+        <div id="puppeteer-options" class="form-group" style="margin-left: 20px;">
+            <label for="waitTime">等待时间（毫秒）：</label>
+            <input type="number" id="waitTime" value="5000" min="1000" max="30000">
+
+            <label for="waitForSelector" style="margin-top: 10px;">等待选择器（可选）：</label>
+            <input type="text" id="waitForSelector" placeholder="例如: .message-content">
+
+            <label>
+                <input type="checkbox" id="headless" checked>
+                无头模式（不显示浏览器窗口）
+            </label>
+        </div>
+
+        <div class="form-group">
+            <button onclick="testGrabDialog()">测试对话抓取</button>
+            <button onclick="testWithExampleFile()">测试示例文件</button>
+            <button onclick="testGeminiUrl()">测试 Gemini URL</button>
+            <button onclick="testFastMode()">快速模式测试</button>
+            <button onclick="clearResult()">清空结果</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testGrabDialog() {
+            const htmlFilePath = document.getElementById('htmlFilePath').value.trim();
+            const url = document.getElementById('url').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!htmlFilePath && !url) {
+                showResult('请输入 HTML 文件路径或 URL', 'error');
+                return;
+            }
+
+            const requestBody = {};
+            if (htmlFilePath) {
+                requestBody.htmlFilePath = htmlFilePath;
+            }
+            if (url) {
+                requestBody.url = url;
+
+                // 如果是 URL 且启用了 Puppeteer，添加选项
+                if (document.getElementById('usePuppeteer').checked) {
+                    requestBody.options = {
+                        waitTime: parseInt(document.getElementById('waitTime').value) || 5000,
+                        waitForSelector: document.getElementById('waitForSelector').value.trim() || null,
+                        headless: document.getElementById('headless').checked,
+                        timeout: 30000
+                    };
+                }
+            }
+
+            showResult('正在抓取对话...', 'loading');
+
+            try {
+                const response = await fetch('/grab-dialog', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showDialogResult(data);
+                } else {
+                    showResult(`抓取失败: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult(`网络错误: ${error.message}`, 'error');
+            }
+        }
+
+        async function testWithExampleFile() {
+            document.getElementById('htmlFilePath').value = './example/_Gemini - 思想钢印：AI 时代的证明.html';
+            document.getElementById('url').value = '';
+            await testGrabDialog();
+        }
+
+        async function testGeminiUrl() {
+            document.getElementById('htmlFilePath').value = '';
+            document.getElementById('url').value = 'https://gemini.google.com/share/c4471bf54153';
+            document.getElementById('usePuppeteer').checked = true;
+            document.getElementById('waitTime').value = '8000';
+            document.getElementById('waitForSelector').value = '.message-content';
+            await testGrabDialog();
+        }
+        
+        async function testFastMode() {
+            document.getElementById('htmlFilePath').value = '';
+            document.getElementById('url').value = 'https://gemini.google.com/share/c4471bf54153';
+            document.getElementById('usePuppeteer').checked = true;
+            document.getElementById('waitTime').value = '2000';
+            document.getElementById('waitForSelector').value = '';
+            document.getElementById('headless').checked = true;
+            
+            showResult('🚀 快速模式测试中...', 'loading');
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch('/grab-dialog', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: 'https://gemini.google.com/share/c4471bf54153',
+                        options: {
+                            waitTime: 2000,
+                            timeout: 20000,
+                            headless: true,
+                            useCache: true
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                const duration = Date.now() - startTime;
+                
+                if (data.success) {
+                    showResult(`⚡ 快速模式成功！\n耗时: ${duration}ms\n对话数量: ${data.count}`, 'success');
+                } else {
+                    showResult(`❌ 快速模式失败: ${data.error}\n耗时: ${duration}ms`, 'error');
+                }
+            } catch (error) {
+                const duration = Date.now() - startTime;
+                showResult(`❌ 网络错误: ${error.message}\n耗时: ${duration}ms`, 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = `result ${type}`;
+            resultDiv.textContent = message;
+        }
+
+        function showDialogResult(data) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = 'result success';
+
+            let html = `<div style="margin-bottom: 15px;">
+                <strong>抓取成功！</strong><br>
+                来源: ${data.source}<br>
+                对话数量: ${data.count} 条
+            </div>`;
+
+            if (data.dialogs && data.dialogs.length > 0) {
+                html += '<div style="margin-bottom: 10px;"><strong>对话内容:</strong></div>';
+
+                data.dialogs.forEach((dialog, index) => {
+                    const roleClass = dialog.role === 'user' ? 'dialog-user' : 'dialog-ai';
+                    const roleText = dialog.role === 'user' ? '用户' : 'AI';
+
+                    html += `<div class="dialog-item ${roleClass}">
+                        <div class="dialog-role">${roleText}:</div>
+                        <div class="dialog-text">${escapeHtml(dialog.text.substring(0, 500))}${dialog.text.length > 500 ? '...' : ''}</div>
+                    </div>`;
+                });
+            } else {
+                html += '<div style="color: #856404;">未找到对话内容</div>';
+            }
+
+            // 添加原始 JSON 数据
+            html += `<details style="margin-top: 20px;">
+                <summary style="cursor: pointer; font-weight: bold;">查看原始 JSON 数据</summary>
+                <pre style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-top: 10px; overflow-x: auto;">${JSON.stringify(data, null, 2)}</pre>
+            </details>`;
+
+            resultDiv.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function clearResult() {
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('htmlFilePath').value = '';
+            document.getElementById('url').value = '';
+        }
+
+        // 页面加载时的提示
+        window.onload = function () {
+            showResult('请输入 HTML 文件路径或 URL，然后点击测试按钮', 'loading');
+        };
+    </script>
+</body>
+
+</html>

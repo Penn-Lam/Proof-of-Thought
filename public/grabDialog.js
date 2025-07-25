@@ -403,9 +403,9 @@ function parseHtml(html) {
     console.log(`对话已保存为 output.json，共提取 ${dialogs.length} 条对话`);
 
     // 输出调试信息
-    dialogs.forEach((dialog, index) => {
-        console.log(`${index + 1}. [${dialog.role}] (${dialog.selector || 'unknown'}): ${dialog.text.substring(0, 100)}...`);
-    });
+    // dialogs.forEach((dialog, index) => {
+    //     console.log(`${index + 1}. [${dialog.role}] (${dialog.selector || 'unknown'}): ${dialog.text.substring(0, 100)}...`);
+    // });
 
     return dialogs;
 }
