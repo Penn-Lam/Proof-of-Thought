@@ -237,6 +237,40 @@ async function handleFormSubmit(e) {
     
     const copyTemplate = getCopyTemplate(scene);
     
+    try {
+        const grabRes = await fetch('/grab-dialog', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: formData.get('url') })
+        });
+        if (grabRes.ok) {
+            const grabData = await grabRes.json();
+            if (grabData.success && Array.isArray(grabData.dialogs)) {
+                potData["dialog"] = grabData.dialogs;
+            }
+        }
+    } catch (err) {
+        // 可以选择忽略抓取失败，或提示用户
+        console.warn('抓取对话失败', err);
+    }
+
+    if(potData.dialog && potData.dialog.length > 0) {
+        try {
+            const res = await fetch('/analyze-thinking', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dialog: potData.dialog })
+                });
+            const data = await res.json();
+            console.log("aaaaa",data);
+        } catch (err) {
+            console.error('分析思维错误', err);
+        }
+    }
+
+
     const submitData = {
         url: formData.get('url'),
         path: formData.get('path'),
@@ -244,7 +278,7 @@ async function handleFormSubmit(e) {
         potData: potData,
         copyTemplate: copyTemplate
     };
-    
+
     try {
         submitBtn.disabled = true;
         submitBtn.textContent = '创建中...';
@@ -261,6 +295,7 @@ async function handleFormSubmit(e) {
             const shortLink = await response.text();
             const copyText = copyTemplate.replace('{short_link}', shortLink);
             showSuccess(shortLink, copyText);
+
         } else {
             const errorText = await response.text();
             alert('创建失败: ' + errorText);
