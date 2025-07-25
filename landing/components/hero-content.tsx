@@ -29,8 +29,10 @@ export default function HeroContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <Casestudy5 featuredCasestudy={featuredFeature} casestudies={features} />
-      <div className="text-center mt-12">
+      <div id="features">
+        <Casestudy5 featuredCasestudy={featuredFeature} casestudies={features} />
+      </div>
+      <div id="about" className="text-center mt-12">
         <h2 className="text-3xl font-bold mb-6 text-white">
           Redefine the Value of<br></br>Human Thinking in the AI Era
         </h2>
@@ -220,10 +222,10 @@ export default function HeroContent() {
       </div>
 
       <div className="mt-16 text-center">
-        <p className="text-gray-300 text-xs">
-          "The value of humanity lies in bringing warmth to a cold universe, using our mortal flesh to write eternal stories."
+        <p className="text-white/70 text-xs italic">
+          “The value of humanity lies in bringing warmth to a cold universe, using our mortal flesh to write eternal stories.”
         </p>
-        <p className="text-gray-400 text-xs mt-2">— PoT Team</p>
+        <p className="text-white/40 text-xs mt-2">— PoT Team</p>
       </div>
     </div>
   );

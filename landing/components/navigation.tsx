@@ -28,10 +28,24 @@ export default function Navigation() {
 
           <div className="hidden md:flex flex-1 justify-center">
             <div className="flex items-baseline space-x-4">
-            <a href="#features" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            <a 
+              href="#features" 
+              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
                 Features
               </a>
-              <a href="#about" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              <a 
+                href="#about" 
+                className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
                 About
               </a>
               <a href="https://github.com/Penn-Lam/Proof-of-Thought" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
@@ -56,13 +70,35 @@ export default function Navigation() {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/90 backdrop-blur-md">
-            <a href="#features" className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+            <a 
+              href="#features" 
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               Features
             </a>
-            <a href="#about" className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+            <a 
+              href="#about" 
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               About
             </a>
-            <a href="#github" className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
+            <a 
+              href="https://github.com/Penn-Lam/Proof-of-Thought" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
+              onClick={() => setIsOpen(false)}
+            >
               GitHub
             </a>
           </div>
