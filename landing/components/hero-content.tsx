@@ -1,68 +1,47 @@
 'use client';
 
-import { Brain, Share2, Sparkles, Clock } from 'lucide-react';
+import { Casestudy5 } from "./ui/casestudy-5";
 
 export default function HeroContent() {
+  const featuredFeature = {
+    company: "PoT",
+    tags: "HUMAN THINKING / AI COLLABORATION",
+    title: "Ritual Animation for Thought Proofs",
+    subtitle: "Elevate your thinking with cinematic animations.",
+    image: "https://framerusercontent.com/images/97D9LMP4XZ7GcnNMEB1wIek.png",
+  };
+
+  const features = [
+    {
+      company: "Process",
+      tags: "THINKING PROCESS / DOCUMENTATION",
+      title: "Capture Your Thought Journey",
+      subtitle: "Document every step of your creative thinking.",
+    },
+    {
+      company: "Share",
+      tags: "ELEGANT SHARING / SOCIAL MEDIA",
+      title: "Share Your Thinking Beautifully",
+      subtitle: "Generate elegant shareable content instantly.",
+    },
+  ];
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-          <div className="flex items-center gap-3 mb-4">
-            <Brain className="w-8 h-8 text-blue-300" />
-            <h3 className="text-xl font-bold text-white">记录思考过程</h3>
-          </div>
-          <p className="text-gray-200">
-            不只是分享结果，更要记录你的思考路径。让每一次创作都有迹可循。
-          </p>
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-          <div className="flex items-center gap-3 mb-4">
-            <Sparkles className="w-8 h-8 text-purple-300" />
-            <h3 className="text-xl font-bold text-white">仪式感动画</h3>
-          </div>
-          <p className="text-gray-200">
-            精心设计的开箱动画，为你的思考证明增添独特的仪式感。
-          </p>
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-          <div className="flex items-center gap-3 mb-4">
-            <Share2 className="w-8 h-8 text-green-300" />
-            <h3 className="text-xl font-bold text-white">优雅分享</h3>
-          </div>
-          <p className="text-gray-200">
-            一键生成优雅的分享文案，让你的思考以最美观的方式呈现。
-          </p>
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-          <div className="flex items-center gap-3 mb-4">
-            <Clock className="w-8 h-8 text-orange-300" />
-            <h3 className="text-xl font-bold text-white">时间证明</h3>
-          </div>
-          <p className="text-gray-200">
-            为你的创作添加时间戳，证明这是你在特定时刻的真实思考。
-          </p>
-        </div>
-      </div>
-
-      <div className="text-center">
+    <div className="max-w-7xl mx-auto px-4">
+      <Casestudy5 featuredCasestudy={featuredFeature} casestudies={features} />
+      <div className="text-center mt-12">
         <h2 className="text-3xl font-bold mb-6 text-white">
-          在AI时代，重新定义"何以为人"
+          Redefine the Value of<br></br>Human Thinking in the AI Era
         </h2>
-        <p className="text-lg text-gray-200 mb-8 leading-relaxed">
-          当AI可以生成完美的答案时，人类的真正价值在于我们的思考过程。
-          Proof of Thought 不是要证明AI的局限，而是要彰显人类思考的独特价值。
-          每一次分享，都是对"何以为人"的深刻诠释。
+        <p className="text-sm text-gray-200 mb-8 leading-relaxed">
+          When AI can generate perfect answers, human thinking is more valuable than ever.
+          Proof of Thought is not about proving the limitations of AI, but about showcasing the unique value of human thinking.
+          Every share is a deep interpretation of "what it means to be human".
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200 shadow-lg">
-            开始创建思考证明
-          </button>
-          <button className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-semibold rounded-xl transition-colors duration-200 border border-white/30">
-            查看示例
+          <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors duration-200 shadow-lg">
+            Get Started
           </button>
         </div>
       </div>
