@@ -58,4 +58,5 @@ function redirect() {
     window.location.replace(warpUrl);
 }
 
+// 启动打字机效果
 typewrite();
