@@ -2,6 +2,8 @@
 
 > 在 AI 时代，为你的分享盖上一个“人类思考”的印章。
 
+[demo bilibili](https://www.bilibili.com/video/BV1KB8YzhEbQ/?vd_source=92ed4e92e920b8e981f7cae917e71816)
+
 ## Inspiration
 
 在一个 AI 可以高效生成文本、代码甚至艺术的时代，我们开始面临一个新的社交难题：直接甩给别人一长串未经思考和整理的 AI 生成内容，是一种不尊重的行为。这不仅将筛选和验证的认知负担转移给了接收者，也消解了分享背后本应有的人类智慧与情感。
