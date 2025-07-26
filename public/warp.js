@@ -109,7 +109,7 @@ function showMindMap() {
     originalLink.textContent = 'Original Link';
     originalLink.style.cssText = `
         padding: 12px 24px;
-        background: linear-gradient(135deg, #ea5455 0%, #9856b4ff 100%);
+        background: linear-gradient(135deg, #ea5455 0%, #ffd460 100%);
         color: white;
         text-decoration: none;
         border-radius: 25px;
@@ -190,29 +190,15 @@ function showMindMap() {
                 animation: true,
                 darkMode: true,
                 data: mindmapData.nodes.map((node, index) => {
-                    // 定义一组渐变色，使用指定的主要配色
-                    const gradients = [
-                        {
-                            type: 'linear',
-                            x: 0, y: 0, x2: 1, y2: 1,
-                            colorStops: [{ offset: 0, color: '#ffd460' }, { offset: 1, color: '#f07b3f' }]
-                        },
-                        {
-                            type: 'linear',
-                            x: 0, y: 0, x2: 1, y2: 1,
-                            colorStops: [{ offset: 0, color: '#ea5455' }, { offset: 1, color: '#ffd460' }]
-                        },
-                        {
-                            type: 'linear',
-                            x: 0, y: 0, x2: 1, y2: 1,
-                            colorStops: [{ offset: 0, color: '#ffd460' }, { offset: 1, color: '#9856b4ff' }]
-                        },
-                        {
-                            type: 'linear',
-                            x: 0, y: 0, x2: 1, y2: 1,
-                            colorStops: [{ offset: 0, color: '#9856b4ff' }, { offset: 1, color: '#ffd460' }]
-                        }
-                    ];
+                    // 银色背景
+                    const silverColor = '#c0c0c0';
+                    
+                    // 选中状态的渐变色
+                    const selectedGradient = {
+                        type: 'linear',
+                        x: 0, y: 0, x2: 1, y2: 1,
+                        colorStops: [{ offset: 0, color: '#ea5455' }, { offset: 1, color: '#ffd460' }]
+                    };
                     
                     return {
                         id: node.id,
@@ -226,7 +212,7 @@ function showMindMap() {
                             position: 'inside', // 将标签位置设置为节点内部
                             formatter: '{b}', // 显示节点名称
                             color: '#ffffff', // 白色字体
-                            fontFamily: 'sans-serif', // 字体
+                            fontFamily: 'Arial, sans-serif', // 使用与标题相同的字体
                             fontSize: 14, // 增大字体大小
                             fontWeight: 'bold', // 加粗字体提高可读性
                             textBorderColor: '#000000', // 添加黑色描边
@@ -234,11 +220,11 @@ function showMindMap() {
                             padding: [5, 10] // 添加内边距
                         },
                         itemStyle: {
-                            color: gradients[index % gradients.length], // 使用渐变色
-                            borderColor: '#000000ff', // 添加边框
-                            borderWidth: 2, // 边框宽度
-                            shadowColor: 'rgba(0, 0, 0, 0.3)', // 添加阴影
-                            shadowBlur: 10 // 阴影模糊度
+                            color: '#d4d4d4ff', // 使用银色背景
+                            borderColor: '#000000', // 添加黑色边框
+                            borderWidth: 1, // 边框宽度
+                            shadowColor: 'rgba(0, 0, 0, 0.1)', // 添加轻微阴影
+                            shadowBlur: 5 // 阴影模糊度
                         },
                         emphasis: {
                             label: {
@@ -246,10 +232,21 @@ function showMindMap() {
                                 fontWeight: 'bold'
                             },
                             itemStyle: {
+                                color: selectedGradient, // 选中时使用指定渐变色
                                 borderColor: '#000000', // 悬浮时改变边框颜色
-                                borderWidth: 3, // 悬浮时增加边框宽度
+                                borderWidth: 2, // 悬浮时增加边框宽度
                                 shadowBlur: 15, // 悬浮时增强阴影效果
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                shadowColor: 'rgba(0, 0, 0, 0.3)'
+                            }
+                        },
+                        // 非选中状态下的模糊效果
+                        blur: {
+                            itemStyle: {
+                                color: 'rgba(192, 192, 192, 0.5)', // 更淡的银色
+                                borderColor: '#cccccc'
+                            },
+                            label: {
+                                color: '#666666'
                             }
                         }
                     };
