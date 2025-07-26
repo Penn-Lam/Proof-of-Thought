@@ -28,8 +28,10 @@
     <img src="https://raw.githubusercontent.com/Penn-Lam/Proof-of-Thought/283761aded274cdeb2eafca629d8a9c1c4f5ea1a/Assets/PoT%20Badge.svg" alt="PoT Badge" width="50">
   </a>
   </p>
+
+  ![code_case](Assets/pr_case.png)
   
-  * **模板化分享**：一键复制优雅的分享文案和带有 PoT 链接的 Markdown 代码，方便地分享到任何地方。
+  * **模板化分享**：一键复制优雅的分享文案和带有 PoT 链接的文案，方便地分享到任何地方。
 
 ## How It Works
 
@@ -64,9 +66,9 @@ flowchart TD
     C --> D[数秒后自动跳转至原始 URL]
 ```
 
-## The PoT Stamp
+## The PoT Badge
 
-“PoT 印章”是你思考的浓缩凭证。你可以把它嵌入到任何支持 Markdown 的地方。它不仅仅是一个链接，更是一种宣言：
+“PoT 印章”是你思考的浓缩凭证。你可以把它嵌入到 GitHub Markdown 渲染的地方。它不仅仅是一个链接，更是一种宣言：
 
 **“这份内容，我思考过，我为此负责。”**
 
