@@ -22,8 +22,13 @@
 
   * **场景化思考表单**：根据你分享的内容是 `对话(Chat)`、`艺术(Art)` 还是 `代码(Code)`，提供不同的引导式问题，帮助你快速梳理思路。
   * **仪式感动画**：在展示“思考证明”前，播放一段精心设计的动画，创造独特的“开箱”体验。
-  * **PoT 印章**：为你的 GitHub MarkDown 提供“PoT 印章”（Badge），可以嵌入到你的博客、PR 中，直观地展示这份内容背后有人类的深度思考。
-  ![PoT Badge](/Assets/PoT%20Badge.svg)
+  * **PoT 印章**：为你的 GitHub MarkDown 提供“PoT 印章”（Badge），可以嵌入到你的博客、PR 中，直观地展示这份内容背后有人类的深度思考
+  <p align="center">
+  <a href="https://github.com/Penn-Lam/Proof-of-Thought">
+    <img src="https://raw.githubusercontent.com/Penn-Lam/Proof-of-Thought/283761aded274cdeb2eafca629d8a9c1c4f5ea1a/Assets/PoT%20Badge.svg" alt="PoT Badge" width="50">
+  </a>
+  </p>
+  
   * **模板化分享**：一键复制优雅的分享文案和带有 PoT 链接的 Markdown 代码，方便地分享到任何地方。
 
 ## How It Works

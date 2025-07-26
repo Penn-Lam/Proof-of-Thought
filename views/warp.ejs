@@ -22,7 +22,7 @@
             url: '<%= dest.url %>',
             scene: '<%= dest.scene %>',
             potData: <%- JSON.stringify(dest.potData) %>,
-            copyTemplate: '<%= dest.copyTemplate %>'
+            copyTemplate: <%- JSON.stringify(dest.copyTemplate) %>
         };
     </script>
 
