@@ -21,11 +21,13 @@
             path: '<%= dest.path %>',
             url: '<%= dest.url %>',
             scene: '<%= dest.scene %>',
-            potData: <%- JSON.stringify(dest.potData) %>,
+            potData: <%- JSON.stringify(dest.potData || {}) %>,
             copyTemplate: '<%= dest.copyTemplate %>'
         };
-    </script>
 
+    </script>
+   <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js"
         integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ=="
         crossorigin="anonymous"></script>

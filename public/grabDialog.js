@@ -22,6 +22,7 @@ async function waitForDelay(page, ms) {
         await new Promise(resolve => setTimeout(resolve, ms));
     }
 }
+
 async function grabDialog(urlOrPath, options = {}) {
     // 判断是 URL 还是本地文件路径
     const isUrl = urlOrPath.startsWith('http://') || urlOrPath.startsWith('https://');
@@ -112,11 +113,14 @@ async function getBrowser(headless = true) {
 
 async function grabWithPuppeteer(url, options = {}) {
     const {
-        waitTime = 2000,           // 减少默认等待时间
+        waitTime = 5000,           // 增加默认等待时间到5秒
         waitForSelector = null,
         headless = true,
-        timeout = 20000,          // 减少超时时间到20秒
-        useCache = true           // 是否使用浏览器缓存
+        timeout = 30000,          // 增加超时时间到30秒
+        useCache = true,          // 是否使用浏览器缓存
+        waitForNetworkIdle = true, // 是否等待网络空闲
+        minDialogs = 2,           // 最少对话数量
+        maxWaitForDialogs = 30000 // 等待对话的最大时间(毫秒)
     } = options;
 
     let browser = null;
@@ -153,12 +157,32 @@ async function grabWithPuppeteer(url, options = {}) {
         console.log(`正在访问: ${url}`);
 
         // 页面导航
-        await page.goto(url, {
+        const navigationPromise = page.goto(url, {
             waitUntil: 'domcontentloaded',
             timeout
         });
 
+        // 如果需要等待网络空闲，则使用networkidle0
+        let waitForNetworkPromise = null;
+        if (waitForNetworkIdle) {
+            waitForNetworkPromise = page.waitForNavigation({ waitUntil: 'networkidle0', timeout });
+        }
+
+        await navigationPromise;
         console.log(`页面加载完成，耗时: ${Date.now() - startTime}ms`);
+
+        // 等待网络空闲（如果启用）
+        if (waitForNetworkPromise) {
+            try {
+                await Promise.race([
+                    waitForNetworkPromise,
+                    waitForDelay(page, 10000) // 最多等待10秒
+                ]);
+                console.log('网络空闲状态达成');
+            } catch (error) {
+                console.log('网络空闲等待超时，继续处理...');
+            }
+        }
 
         // 智能等待：并行检测内容和等待
         const hasContent = await Promise.race([
@@ -170,11 +194,17 @@ async function grabWithPuppeteer(url, options = {}) {
             console.log('内容已加载，跳过额外等待');
         } else {
             console.log('等待更多内容加载...');
-            await waitForDelay(page, 20000); // 额外等待1秒
+            await waitForDelay(page, 5000); // 额外等待5秒
         }
 
         // 快速滚动以触发懒加载
         await quickScroll(page);
+
+        // 等待一小段时间让滚动后的内容加载
+        await waitForDelay(page, 2000);
+
+        // 等待足够的对话数据加载
+        await waitForDialogs(page, minDialogs, maxWaitForDialogs);
 
         console.log('获取页面内容...');
         const html = await page.content();
@@ -201,21 +231,75 @@ async function grabWithPuppeteer(url, options = {}) {
     }
 }
 
+// 等待足够的对话数据加载
+async function waitForDialogs(page, minDialogs, maxWaitTime) {
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < maxWaitTime) {
+        try {
+            const dialogCount = await page.evaluate(() => {
+                // 检查常见的对话选择器
+                const selectors = [
+                    '.message-content',
+                    '.response-container',
+                    '.user-query-container',
+                    '.gemini-message',
+                    '.chat-message',
+                    '.message',
+                    '[data-message-id]',
+                    '[data-testid*="message"]'
+                ];
+                
+                let total = 0;
+                for (const selector of selectors) {
+                    total += document.querySelectorAll(selector).length;
+                }
+                return total;
+            });
+            
+            console.log(`检测到 ${dialogCount} 条对话消息`);
+            
+            if (dialogCount >= minDialogs) {
+                console.log(`已加载 ${dialogCount} 条对话，达到最少要求 ${minDialogs} 条`);
+                return;
+            }
+            
+            // 等待一段时间后再次检查
+            await waitForDelay(page, 2000);
+        } catch (error) {
+            console.log('检查对话数量时出错:', error.message);
+            // 即使出错也继续等待
+            await waitForDelay(page, 2000);
+        }
+    }
+    
+    console.log(`等待对话数据超时，继续处理...`);
+}
+
 // 智能内容检测
 async function checkForContent(page) {
+    // 扩展选择器列表以支持更多平台
     const selectors = [
         '.message-content',
         '.response-container',
         '.user-query-container',
+        '.gemini-message',
+        '.chat-message',
+        '.message',
+        '[data-message-id]',
+        '[data-testid*="message"]',
         'p'
     ];
 
-    for (let i = 0; i < 15; i++) { // 最多检查15次，每次200ms
+    for (let i = 0; i < 25; i++) { // 增加检查次数到25次，每次200ms
         for (const selector of selectors) {
             try {
                 const hasText = await page.evaluate((sel) => {
                     const els = document.querySelectorAll(sel);
-                    return Array.from(els).some(el => el.textContent.trim().length > 20);
+                    return Array.from(els).some(el => {
+                        const text = el.textContent || el.innerText || '';
+                        return text.trim().length > 20;
+                    });
                 }, selector);
 
                 if (hasText) {
@@ -237,17 +321,19 @@ async function quickScroll(page) {
         await page.evaluate(() => {
             return new Promise((resolve) => {
                 let scrollCount = 0;
-                const maxScrolls = 10; // 减少滚动次数
+                const maxScrolls = 20; // 增加滚动次数
 
                 const scroll = () => {
                     if (scrollCount >= maxScrolls) {
-                        resolve();
+                        // 滚动到底部确保所有内容加载
+                        window.scrollTo(0, document.body.scrollHeight);
+                        setTimeout(resolve, 1000); // 等待1秒后完成
                         return;
                     }
 
                     window.scrollBy(0, window.innerHeight);
                     scrollCount++;
-                    setTimeout(scroll, 100);
+                    setTimeout(scroll, 150); // 减少间隔到150ms
                 };
 
                 scroll();
@@ -300,7 +386,10 @@ function parseHtml(html) {
         '[data-test-id*="user"]',
         '.user-message',
         '.human-message',
-        '.query-container'
+        '.query-container',
+        '.message-user',
+        '.chat-user-message',
+        '[data-author="user"]'
     ];
 
     for (const selector of userSelectors) {
@@ -327,7 +416,11 @@ function parseHtml(html) {
         '.assistant-message',
         '.bot-message',
         '[data-test-id*="response"]',
-        '[data-test-id*="assistant"]'
+        '[data-test-id*="assistant"]',
+        '.message-assistant',
+        '.chat-assistant-message',
+        '[data-author="assistant"]',
+        '.gemini-message'
     ];
 
     for (const selector of aiSelectors) {
@@ -342,6 +435,9 @@ function parseHtml(html) {
             $clone.find('.response-container-footer').remove();
             $clone.find('script').remove();
             $clone.find('style').remove();
+            $clone.find('svg').remove();
+            $clone.find('img').remove();
+            $clone.find('form').remove();
 
             const text = $clone.text().replace(/^用户：|^AI：|^Assistant:|^Bot:/, '').trim();
             if (text && text.length > 20) { // AI 响应通常更长
@@ -411,6 +507,3 @@ function parseHtml(html) {
 }
 
 module.exports = grabDialog;
-
-
-

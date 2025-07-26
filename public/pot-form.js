@@ -226,7 +226,9 @@ function validateForm() {
 
 
 async function handleFormSubmit(e) {
-    console.log('handleFormSubmit called');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '创建中...';
+        
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -269,7 +271,8 @@ async function handleFormSubmit(e) {
                 body: JSON.stringify({ dialog: potData.dialog})
             });
         const data = await res.json();
-        console.log("aaaaa",data);
+        console.log("thinkingMap",data);
+        potData["thinkingMap"] = data;
     } catch (err) {
         console.error('分析思维错误', err);
     }
@@ -283,9 +286,7 @@ async function handleFormSubmit(e) {
         copyTemplate: copyTemplate
     };
     try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = '创建中...';
-        
+
         const response = await fetch('/create', {
             method: 'POST',
             headers: {

@@ -19,7 +19,7 @@ function setup() {
 }
 
 function draw() {
-    background(10, 6, 19, 255);
+    background(0,0, 0, 255);
     for (let comet of comets) {
         comet.update();
         comet.draw();
@@ -58,7 +58,7 @@ class Comet {
         // 超出画布边界则重生
         if (
             this.pos.x < -150 || this.pos.x > width + 150 ||
-            this.pos.y < -150 || this.pos.y > height + 150
+            this.pos.y < -500 || this.pos.y > height + 500
         ) {
             this.respawn();
         }
