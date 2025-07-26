@@ -96,7 +96,7 @@ const SCENE_CONFIGS = {
                 required: true
             }
         ],
-        copyTemplate: '这是我vibe coding完成的PR，但我做了关键的修改和决策。这是最终的代码实现和我的思路，分享给你：{short_link}'
+        copyTemplate: '<p align="center">\n  <a href="{short_link}" target="_blank">\n    <img src="https://raw.githubusercontent.com/Penn-Lam/Proof-of-Thought/283761aded274cdeb2eafca629d8a9c1c4f5ea1a/Assets/PoT%20Badge.svg" alt="PoT Badge" width="60">\n  </a>\n</p>'
     },
     general: {
         title: '通用分享',

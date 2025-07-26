@@ -27,7 +27,7 @@ function generatePotText() {
             thoughtText = `> 分享者的思考:\n> "这是一个值得分享的内容"`;
     }
 
-    return `[OK] Human Cognitive Signature Verified.\n[INFO] Injecting Thought-Payload:\n|\n|\n${thoughtText}\n|\n> Establishing quantum tunnel to target vector...\n> Target: ${warpUrl}\n> Engaging Warp Drive in T-minus: [3]...[2]...[1]...\n>>> CONNECTION ESTABLISHED. ENGAGE!`;
+    return `[OK] Human Cognitive Signature Verified.\n[INFO] Injecting Thought-Payload:\n|\n|\n${thoughtText}\n|\n> Establishing quantum tunnel to target vector...\n> Engaging Warp Drive in T-minus: [3]...[2]...[1]...\n>>> CONNECTION ESTABLISHED. ENGAGE!`;
 }
 
 warpText = generatePotText();
