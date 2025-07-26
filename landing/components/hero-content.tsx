@@ -9,7 +9,8 @@ export default function HeroContent() {
     tags: "HUMAN THINKING / AI COLLABORATION",
     title: "Ritual Animation for Thought Proofs",
     subtitle: "Elevate your thinking with cinematic animations.",
-    image: "https://framerusercontent.com/images/97D9LMP4XZ7GcnNMEB1wIek.png",
+    // image: "https://framerusercontent.com/images/97D9LMP4XZ7GcnNMEB1wIek.png",
+    image: "https://github.com/Penn-Lam/Proof-of-Thought/blob/feature-landing-page/Assets/chat_case.gif?raw=true",
   };
 
   const features = [

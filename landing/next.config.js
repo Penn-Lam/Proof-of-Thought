@@ -7,7 +7,8 @@ const nextConfig = {
       'me7aitdbxq.ufs.sh',
       'via.placeholder.com',
       'pbs.twimg.com',
-      'framerusercontent.com'
+      'framerusercontent.com',
+      'github.com'
     ],
   },
 }
